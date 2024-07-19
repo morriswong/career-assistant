@@ -122,7 +122,7 @@ def generate(prompt, deployment_name, llm='groq'):
 st.title("Career Assitant")
 col1, col2, col3 = st.columns(3)
 with col1:
-    col2.subheader("Summeized JD")
+    col1.subheader("summarized JD")
     url = st.chat_input(placeholder="The URL of the job description")
     url_str = get_plain_text(url)
     prompt = f"Give me a summary of this role: {url_str}"
