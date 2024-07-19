@@ -122,9 +122,12 @@ def generate(prompt, deployment_name, llm='groq'):
 st.title("Career Assitant")
 col1, col2, col3 = st.columns(3)
 with col1:
+    col2.subheader("Read JD")
     url = st.chat_input(placeholder="The URL of the job description")
     url_str = get_plain_text(url)
+    prompt = f"Give me a summary of this role: {url_str}"
     response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
+    st.markdown(url)
     st.markdown(response)
 with col2:
     col2.subheader("Read JD")
