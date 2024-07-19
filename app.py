@@ -122,7 +122,7 @@ def generate(prompt, deployment_name, llm='groq'):
 st.title("Career Assitant")
 col1, col2, col3 = st.columns(3)
 with col1:
-    col2.subheader("Read JD")
+    col2.subheader("Summeized JD")
     url = st.chat_input(placeholder="The URL of the job description")
     url_str = get_plain_text(url)
     prompt = f"Give me a summary of this role: {url_str}"
@@ -130,7 +130,7 @@ with col1:
     st.markdown(url)
     st.markdown(response)
 with col2:
-    col2.subheader("Read JD")
+    col2.subheader("Must haves and good to haves")
     if url:
         url_str = get_plain_text(url)
         prompt = f"What are the must have and good to have for this role: {url_str}"
