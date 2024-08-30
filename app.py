@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 st.set_page_config(
-    page_title="Career Assitant",
+    page_title="Career Assistant",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -100,7 +100,7 @@ def get_plain_text(url):
 
 def generate(prompt, deployment_name, llm='groq'):
     if llm == 'groq':
-        client = Groq(api_key='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')
+        client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
         
     completion = client.chat.completions.create(
         model=deployment_name,
