@@ -1,6 +1,4 @@
-Here is a possible README file for your app:
-
-**Career Assitant**
+# Career Assistant
 
 A career-focused chatbot built with Streamlit and Groq
 

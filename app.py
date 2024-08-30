@@ -119,7 +119,7 @@ def generate(prompt, deployment_name, llm='groq'):
     completion_tokens = completion.usage.completion_tokens
     return response, total_tokens, prompt_tokens, completion_tokens
 
-st.title("Career Assitant")
+st.title("Career Assistant")
 col1, col2, col3 = st.columns(3)
 with col1:
     col1.subheader("Summarized JD")
