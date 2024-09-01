@@ -9,15 +9,15 @@ from groq import Groq
 from dotenv import load_dotenv
 load_dotenv()
 
+from traceloop.sdk import Traceloop 
+Traceloop.init(app_name="career_assistant")
+
 st.set_page_config(
     page_title="Career Assistant",
-    page_icon="🧊",
+    page_icon="📝",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
-
-# Create the Groq client
-client_groq = Groq(api_key=os.environ.get('GROQ_API_KEY'), )
 
 # Set the system prompt
 system_prompt = {
@@ -100,7 +100,7 @@ def get_plain_text(url):
 
 def generate(prompt, deployment_name, llm='groq'):
     if llm == 'groq':
-        client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
+        client = Groq(api_key=st.secrets['GROQ_API_KEY'])
         
     completion = client.chat.completions.create(
         model=deployment_name,
@@ -120,36 +120,36 @@ def generate(prompt, deployment_name, llm='groq'):
     return response, total_tokens, prompt_tokens, completion_tokens
 
 st.title("Career Assistant")
+st.subheader("Turn Job Descriptions to Resume Bullet Points")
+url = st.text_input('Link of the Job Description')
 col1, col2, col3 = st.columns(3)
 with col1:
-    col1.subheader("Summarized JD")
-    url = st.chat_input(placeholder="The URL of the job description")
-    url_str = get_plain_text(url)
-    prompt = f"Give me a summary of this role: {url_str}"
-    response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
-    st.markdown(url)
-    st.markdown(response)
-with col2:
-    col2.subheader("Must haves and good to haves")
     if url:
+        col1.subheader("Summary")
         url_str = get_plain_text(url)
-        prompt = f"What are the must have and good to have for this role: {url_str}"
-        response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+        prompt = f"Give me a summary of this role: {url_str}"
+        response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
+        st.markdown(url)
         st.markdown(response)
-with col3:
-    col3.subheader("Resume Bullet points suggestions")
-    if url:
-        url_str = get_plain_text(url)
-        prompt = f"""
-            {url_str}
-            
-            Given this JD above, come up with some strong bullet points to show in a resume.
-            Here are some examples of what make a bullet point great:
-            OK: "Member of Leadership for Tomorrow Society"
-            Better: "Selected as one of 275 for this 12-month professional development program for high-achieving diverse talent."
-            Best: "Selected as one of 275 participants nationwide for this 12-month professional development program for high-achieving diverse talent based on leadership potential and academic success."
-        """
-        response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
-        st.markdown(response)
-    else:
-        st.write("Please enter a prompt")
+    with col2:
+        if url:
+            col2.subheader("Must haves and good to haves")
+            url_str = get_plain_text(url)
+            prompt = f"What are the must have and good to have for this role: {url_str}"
+            response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+            st.markdown(response)
+    with col3:
+        if url:
+            col3.subheader("Resume Bullet points suggestions")
+            url_str = get_plain_text(url)
+            prompt = f"""
+                {url_str}
+                
+                Given this JD above, come up with some strong bullet points to show in a resume.
+                Here are some examples of what make a bullet point great:
+                OK: "Member of Leadership for Tomorrow Society"
+                Better: "Selected as one of 275 for this 12-month professional development program for high-achieving diverse talent."
+                Best: "Selected as one of 275 participants nationwide for this 12-month professional development program for high-achieving diverse talent based on leadership potential and academic success."
+            """
+            response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+            st.markdown(response)
