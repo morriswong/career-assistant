@@ -129,7 +129,6 @@ with col1:
         url_str = get_plain_text(url)
         prompt = f"Give me a summary of this role: {url_str}"
         response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
-        st.markdown(url)
         st.markdown(response)
     with col2:
         if url:
