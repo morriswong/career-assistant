@@ -4,7 +4,7 @@ A career helper software, starting with generating resume bullet points from job
 
 **Overview**
 
-Career duck is a chatbot designed to help users create concise reports on job descriptions, highlighting must-haves and good-to-haves for a particular role. The bot uses natural language processing (NLP) to generate summary bullet points for a resume.
+Career Duck is your companion of your career. It will generate strong bullet point for writing your resume.
 
 **Features**
 
@@ -44,4 +44,4 @@ Contributions are welcome! If you'd like to contribute to the Career Assiant, pl
 
 **License**
 
-The Career Assitant is licensed under the Apache License 2.0.
+The Career Duck is licensed under the Apache License 2.0.
