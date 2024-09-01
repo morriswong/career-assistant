@@ -1,4 +1,3 @@
-import os
 import requests
 import json
 
@@ -10,7 +9,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from traceloop.sdk import Traceloop 
-Traceloop.init(app_name="career_duck")
+from traceloop.sdk.decorators import workflow
+
+Traceloop.init(
+    app_name="career_duck", 
+    disable_batch=False, 
+    api_key=st.secrets['TRACELOOP_API_KEY']
+)
+
 
 st.set_page_config(
     page_title="Career Duck",
@@ -43,62 +49,19 @@ You are an AI assistant that helps users write concise\
 seed_message = {"role": "system", "content": default_prompt}
 # endregion
 
-# region SESSION MANAGEMENT
-# Initialise session state variables
-if "generated" not in st.session_state:
-    st.session_state["generated"] = []
-if "past" not in st.session_state:
-    st.session_state["past"] = []
-if "messages" not in st.session_state:
-    st.session_state["messages"] = [seed_message]
-if "model_name" not in st.session_state:
-    st.session_state["model_name"] = []
-if "cost" not in st.session_state:
-    st.session_state["cost"] = []
-if "total_tokens" not in st.session_state:
-    st.session_state["total_tokens"] = []
-if "total_cost" not in st.session_state:
-    st.session_state["total_cost"] = 0.0
-# endregion
-
-# region SIDEBAR SETUP
-
-counter_placeholder = st.sidebar.empty()
-counter_placeholder.write(
-    f"Total cost of this conversation: ${st.session_state['total_cost']:.5f}"
-)
-clear_button = st.sidebar.button("Clear Conversation", key="clear")
-
-if clear_button:
-    st.session_state["generated"] = []
-    st.session_state["past"] = []
-    st.session_state["messages"] = [seed_message]
-    st.session_state["number_tokens"] = []
-    st.session_state["model_name"] = []
-    st.session_state["cost"] = []
-    st.session_state["total_cost"] = 0.0
-    st.session_state["total_tokens"] = []
-    counter_placeholder.write(
-        f"Total cost of this conversation: £{st.session_state['total_cost']:.5f}"
-    )
-
-
-download_conversation_button = st.sidebar.download_button(
-    "Download Conversation",
-    data=json.dumps(st.session_state["messages"]),
-    file_name=f"conversation.json",
-    mime="text/json",
-)
-
 def get_plain_text(url):
     """
-    Get plain text from a url object.
+        Get plain text from a url object.
     """
     plain_text_url = 'https://r.jina.ai/{url}'
     r = requests.get(plain_text_url.format(url=url))
     return str(r.content)
 
+@workflow(name="generate_bulletpoints")
 def generate(prompt, deployment_name, llm='groq'):
+    '''
+        LLM api call
+    '''
     if llm == 'groq':
         client = Groq(api_key=st.secrets['GROQ_API_KEY'])
         
