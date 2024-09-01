@@ -10,11 +10,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from traceloop.sdk import Traceloop 
-Traceloop.init(app_name="career_assistant")
+Traceloop.init(app_name="career_duck")
 
 st.set_page_config(
-    page_title="Career Assistant",
-    page_icon="📝",
+    page_title="Career Duck",
+    page_icon="🦆",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -119,36 +119,43 @@ def generate(prompt, deployment_name, llm='groq'):
     completion_tokens = completion.usage.completion_tokens
     return response, total_tokens, prompt_tokens, completion_tokens
 
-st.title("Career Assistant")
+st.title("Career Duck 🦆")
 st.subheader("Turn Job Descriptions to Resume Bullet Points")
-url = st.text_input('Link of the Job Description')
-col1, col2, col3 = st.columns(3)
-with col1:
-    if url:
-        col1.subheader("Summary")
-        url_str = get_plain_text(url)
-        prompt = f"Give me a summary of this role: {url_str}"
-        response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
-        st.markdown(response)
-    with col2:
+form = st.form(key='my-form')
+url = form.text_input('Enter the link of the job description')
+submit = form.form_submit_button('Get bullet points')
+
+if submit:        
+    col1, col2, col3 = st.columns(3)
+    with col1:
         if url:
-            col2.subheader("Must haves and good to haves")
-            url_str = get_plain_text(url)
-            prompt = f"What are the must have and good to have for this role: {url_str}"
-            response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
-            st.markdown(response)
-    with col3:
-        if url:
-            col3.subheader("Resume Bullet points suggestions")
-            url_str = get_plain_text(url)
-            prompt = f"""
-                {url_str}
-                
-                Given this JD above, come up with some strong bullet points to show in a resume.
-                Here are some examples of what make a bullet point great:
-                OK: "Member of Leadership for Tomorrow Society"
-                Better: "Selected as one of 275 for this 12-month professional development program for high-achieving diverse talent."
-                Best: "Selected as one of 275 participants nationwide for this 12-month professional development program for high-achieving diverse talent based on leadership potential and academic success."
-            """
-            response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
-            st.markdown(response)
+            with st.spinner('Getting summary'):
+                url_str = get_plain_text(url)
+                prompt = f"Give me a brief summary of this role: {url_str}"
+                response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
+                col1.subheader("Summary")
+                st.markdown(response)
+        with col2:
+            with st.spinner('Getting must haves and good to haves '):
+                if url:
+                    url_str = get_plain_text(url)
+                    prompt = f"What are the must have and good to have for this role: {url_str}"
+                    response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+                    col2.subheader("Must haves and good to haves")
+                    st.markdown(response)
+        with col3:
+            with st.spinner('Getting bullet points'):
+                if url:
+                    url_str = get_plain_text(url)
+                    prompt = f"""
+                        {url_str}
+                        
+                        Given this JD above, come up with some strong bullet points to show in a resume.
+                        Here are some examples of what make a bullet point great:
+                        OK: "Member of Leadership for Tomorrow Society"
+                        Better: "Selected as one of 275 for this 12-month professional development program for high-achieving diverse talent."
+                        Best: "Selected as one of 275 participants nationwide for this 12-month professional development program for high-achieving diverse talent based on leadership potential and academic success."
+                    """
+                    response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+                    col3.subheader("Resume Bullet points suggestions")
+                    st.markdown(response)
