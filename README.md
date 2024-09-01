@@ -1,10 +1,10 @@
-# Career Assistant
+# Career Duck
 
-A career-focused chatbot built with Streamlit and Groq
+A career helper software, starting with generating resume bullet points from job description.
 
 **Overview**
 
-The Career Assitant is a chatbot designed to help users create concise reports on job descriptions, highlighting must-haves and good-to-haves for a particular role. The bot uses natural language processing (NLP) to generate summary bullet points for a resume.
+Career duck is a chatbot designed to help users create concise reports on job descriptions, highlighting must-haves and good-to-haves for a particular role. The bot uses natural language processing (NLP) to generate summary bullet points for a resume.
 
 **Features**
 
