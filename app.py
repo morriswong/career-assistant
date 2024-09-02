@@ -22,7 +22,7 @@ Traceloop.init(
 
 st.set_page_config(
     page_title="Career Duck",
-    page_icon="🦆",
+    page_icon="🐤",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -78,7 +78,7 @@ def generate(prompt, deployment_name, llm='groq'):
 
     return response, total_tokens, prompt_tokens, completion_tokens
 
-st.title("Career Duck 🦆")
+st.title("Career Duck 🐤")
 st.subheader("Turn Job Descriptions to Resume Bullet Points")
 form = st.form(key='my-form')
 url = form.text_input('Enter the link of the job description')
