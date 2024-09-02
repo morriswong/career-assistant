@@ -2,7 +2,7 @@ import requests
 import json
 
 import streamlit as st
-from streamlit_chat import message  
+import streamlit.components.v1 as components
 
 from groq import Groq
 from dotenv import load_dotenv
@@ -60,7 +60,7 @@ def get_plain_text(url):
 @workflow(name="generate_bulletpoints")
 def generate(prompt, deployment_name, llm='groq'):
     '''
-        LLM api call
+        LLM API call
     '''
     if llm == 'groq':
         client = Groq(api_key=st.secrets['GROQ_API_KEY'])
@@ -89,36 +89,33 @@ url = form.text_input('Enter the link of the job description')
 submit = form.form_submit_button('Get bullet points')
 
 if submit:        
-    col1, col2, col3 = st.columns(3)
-    with col1:
+    tab1, tab2, tab3 = st.tabs(["Bullet Points", "Donate", "Feedback"])
+    with tab1:
         if url:
-            with st.spinner('Getting summary'):
-                url_str = get_plain_text(url)
-                prompt = f"Give me a brief summary of this role: {url_str}"
-                response, total_tokens, prompt_tokens, completion_tokens = generate(url_str, 'llama3-70b-8192')
-                col1.subheader("Summary")
-                st.markdown(response)
-        with col2:
-            with st.spinner('Getting must haves and good to haves '):
-                if url:
-                    url_str = get_plain_text(url)
-                    prompt = f"What are the must have and good to have for this role: {url_str}"
-                    response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
-                    col2.subheader("Must haves and good to haves")
-                    st.markdown(response)
-        with col3:
             with st.spinner('Getting bullet points'):
-                if url:
-                    url_str = get_plain_text(url)
-                    prompt = f"""
-                        {url_str}
-                        
-                        Given this JD above, come up with some strong bullet points to show in a resume.
-                        Here are some examples of what make a bullet point great:
-                        OK: "Member of Leadership for Tomorrow Society"
-                        Better: "Selected as one of 275 for this 12-month professional development program for high-achieving diverse talent."
-                        Best: "Selected as one of 275 participants nationwide for this 12-month professional development program for high-achieving diverse talent based on leadership potential and academic success."
-                    """
-                    response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
-                    col3.subheader("Resume Bullet points suggestions")
-                    st.markdown(response)
+                url_str = get_plain_text(url)
+                prompt = f"""
+                    {url_str}
+                    
+                    Given this Job Description above, come up with some strong bullet points to show in a resume.
+                    Here are some examples of what make a bullet point great:
+                    OK: "Member of Leadership for Tomorrow Society"
+                    Better: "Selected as one of 275 for this 12-month professional development program for high-achieving diverse talent."
+                    Best: "Selected as one of 275 participants nationwide for this 12-month professional development program for high-achieving diverse talent based on leadership potential and academic success."
+                """
+                response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+                tab1.subheader("Resume Bullet points suggestions")
+                st.markdown(response)
+    with tab2:
+        components.iframe(
+            src="https://ko-fi.com/morriswong/?hidefeed=true&widget=true&embed=true&preview=true",
+            width=None,
+            height=800,
+            scrolling=False,
+        )
+        # <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="morriswch" data-description="Support me on Buy me a coffee!" data-message="Let's go and land that job!" data-color="#BD5FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+    with tab3:
+        feedback_form = st.form(key='feebback')
+        feedback_text = feedback_form.text_input('Let me know what you think!')
+        feedback_submit = feedback_form.form_submit_button('Send Feedback')
+        #TODO: Connect to Neon/ Google Sheet
