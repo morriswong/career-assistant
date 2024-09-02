@@ -48,7 +48,7 @@ def generate(prompt, deployment_name, llm='groq'):
         LLM API call
     '''
     if llm == 'groq':
-        client = Groq(api_key=st.secrets['GROQ_API_KEYY'])
+        client = Groq(api_key=st.secrets['GROQ_API_KEY'])
     
     try:
         completion = client.chat.completions.create(
