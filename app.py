@@ -138,3 +138,9 @@ if submit:
         feedback_submit = feedback_form.form_submit_button('Send Feedback')
         if feedback_submit:
             st.markdown('Thanks for the feedback! Hope you land your job soon!')
+
+hide_footer_style = """
+    <style>
+    .reportview-container .main footer {visibility: hidden;}    
+"""
+st.markdown(hide_footer_style, unsafe_allow_html=True)
