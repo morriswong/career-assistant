@@ -1,3 +1,4 @@
+import os
 import json
 import requests
 import validators
@@ -17,7 +18,7 @@ from traceloop.sdk.decorators import workflow
 Traceloop.init(
     app_name="career_duck", 
     disable_batch=False, 
-    api_key=st.secrets['TRACELOOP_API_KEY']
+    api_key=os.environ.get("TRACELOOP_API_KEY")
 )
 
 st.set_page_config(
@@ -48,7 +49,7 @@ def generate(prompt, deployment_name, llm='groq'):
         LLM API call
     '''
     if llm == 'groq':
-        client = Groq(api_key=st.secrets['GROQ_API_KEY'])
+        client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
     
     try:
         completion = client.chat.completions.create(
