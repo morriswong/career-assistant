@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import pandas as pd
 import validators
 from urllib.parse import urlparse
 
@@ -9,8 +10,6 @@ import streamlit.components.v1 as components
 
 import groq
 from groq import Groq
-from dotenv import load_dotenv
-load_dotenv()
 
 from traceloop.sdk import Traceloop 
 from traceloop.sdk.decorators import workflow
@@ -80,14 +79,47 @@ def generate(prompt, deployment_name, llm='groq'):
     return response, total_tokens, prompt_tokens, completion_tokens
 
 st.title("Career Duck 🐤")
-st.subheader("Turn Job Descriptions to Resume Bullet Points")
+st.subheader("Build your Resume from Job Descriptions")
+with st.expander("Job Board"):
+    r = requests.get('https://himalayas.app/jobs/api').content
+    json_string = r.decode('utf-8')
+    data = json.loads(json_string)  
+    df = pd.DataFrame(data['jobs'])  
+    st.dataframe(df.filter(items=['title', 'companyName', 'applicationLink']))
+
 form = st.form(key='my-form')
-url = form.text_input('Enter the link of the job description')
+url = form.text_input('Copy and paste the link of the job description below')
 submit = form.form_submit_button('Get bullet points')
 
 if submit:
-    tab1, tab2, tab3 = st.tabs(["Bullet Points", "Donate", "Feedback"])
+    tab1, tab2, tab3 = st.tabs(["Analysis", "Resume Bullet Points", "Donate"])
     with tab1:
+        if url:
+            with st.spinner('Analysing the job descriptions'):
+                try:
+                    url_str = get_plain_text(url)
+                    try:
+                        prompt = f"""
+                            {url_str}
+                            
+                            Given the job descriptions above, give the following sections:
+
+                            Summary of the job:
+
+                            The ideal profile:
+
+                            Top 5 Skills:                
+                            """
+                        response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
+                        st.markdown(response)
+                    except Exception as e:
+                        st.warning("Apologies but too many people is using it now! Please try again later.")
+                except ValueError as e:
+                    if str(e) == "URL is a LinkedIn URL":
+                        st.warning("LinkedIn is strict on crwaling! Use the actual JD link on the career website dinstead.")
+                    else:
+                        st.error("Invalid URL")
+    with tab2:
         if url:
             with st.spinner('Getting bullet points'):
                 try:
@@ -114,7 +146,7 @@ if submit:
                             """
                         response, total_tokens, prompt_tokens, completion_tokens = generate(prompt, 'llama3-70b-8192')
 
-                        tab1.subheader("Resume Bullet points suggestions")
+                        tab2.subheader("Resume Bullet points suggestions")
                         st.markdown(response)
                     except Exception as e:
                         st.warning("Apologies but too many people is using it now! Please try again later.")
@@ -123,8 +155,7 @@ if submit:
                         st.warning("LinkedIn is strict on crwaling! Use the actual JD link on the career website dinstead.")
                     else:
                         st.error("Invalid URL")
-
-    with tab2:
+    with tab3:
         with st.spinner('Thanks! Loading the donation page'):
             components.iframe(
                 src="https://buymeacoffee.com/morriswch",
@@ -132,14 +163,7 @@ if submit:
                 height=800,
                 scrolling=False,
             )
-    with tab3:
-        #TODO: Connect to Neon/ Google Sheet
-        feedback_form = st.form(key='feedback')
-        feedback_text = feedback_form.text_input('Let me know what you think!')
-        feedback_submit = feedback_form.form_submit_button('Send Feedback')
-        if feedback_submit:
-            st.markdown('Thanks for the feedback! Hope you land your job soon!')
-
+        
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
