@@ -1,3 +1,4 @@
+import uuid
 import os
 import json
 import requests
@@ -83,17 +84,25 @@ st.subheader("Build your Resume from Job Descriptions")
 with st.expander("Find a link from job boards"):
     tab1, tab2, tab3, tab4 = st.tabs(["AI & Data", "Finance", "Marketing", "Remote"])
     with tab1:
-        st.markdown('https://aijobs.net/')
-        st.markdown('https://outerjoin.us/')
+        st.markdown('''
+            - https://aijobs.net/
+            - https://outerjoin.us/
+        ''')
     with tab2:
-        st.markdown('https://www.efinancialcareers.co.uk/jobs')
+        st.markdown('''
+            - https://www.efinancialcareers.co.uk/jobs
+        ''')
     with tab3:
-        st.markdown('https://www.digitalmarketingjobs.com/')
-        st.markdown('https://www.onlymarketingjobs.com/')
-        st.markdown('https://www.campaignlive.co.uk/jobs/')
+        st.markdown('''
+            - https://www.digitalmarketingjobs.com/
+            - https://www.onlymarketingjobs.com/
+            - https://www.campaignlive.co.uk/jobs/
+        ''')
     with tab4:
-        st.markdown('https://remoteok.com/remote-jobs')
-        st.markdown('https://himalayas.app/jobs')
+        st.markdown('''
+            - https://remoteok.com/remote-jobs
+            - https://himalayas.app/jobs
+        ''')
         
 form = st.form(key='my-form')
 url = form.text_input('Copy and paste the link of the job description below')
