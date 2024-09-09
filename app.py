@@ -80,13 +80,18 @@ def generate(prompt, deployment_name, llm='groq'):
 
 st.title("Career Duck 🐤")
 st.subheader("Build your Resume from Job Descriptions")
-with st.expander("Job Board powered by Himalayas"):
-    r = requests.get('https://himalayas.app/jobs/api').content
-    json_string = r.decode('utf-8')
-    data = json.loads(json_string)  
-    df = pd.DataFrame(data['jobs'])  
-    st.dataframe(df.filter(items=['title', 'companyName', 'applicationLink']))
-
+with st.expander("Check out these job boards"):
+    tab1, tab2, tab3 = st.tabs(["Data", "Marketing", "Developer"])
+    with tab1:
+        st.markdown('https://remoteok.com/remote-jobs')
+        st.markdown('https://aijobs.net/')
+        st.markdown('https://outerjoin.us/')
+        st.markdown('https://himalayas.app/jobs/api')
+    with tab2:
+        st.write('Coming soon')
+    with tab3:
+        st.write('Coming soon')
+        
 form = st.form(key='my-form')
 url = form.text_input('Copy and paste the link of the job description below')
 submit = form.form_submit_button('Get bullet points')
