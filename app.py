@@ -80,7 +80,7 @@ def generate(prompt, deployment_name, llm='groq'):
 
 st.title("Career Duck 🐤")
 st.subheader("Build your Resume from Job Descriptions")
-with st.expander("Job Board"):
+with st.expander("Job Board powered by Himalayas"):
     r = requests.get('https://himalayas.app/jobs/api').content
     json_string = r.decode('utf-8')
     data = json.loads(json_string)  
