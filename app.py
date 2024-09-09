@@ -81,15 +81,17 @@ def generate(prompt, deployment_name, llm='groq'):
 st.title("Career Duck 🐤")
 st.subheader("Build your Resume from Job Descriptions")
 with st.expander("Check out these job boards"):
-    tab1, tab2, tab3 = st.tabs(["Data", "Marketing", "Developer"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Data", "Finance", "Marketing", "Developer"])
     with tab1:
         st.markdown('https://remoteok.com/remote-jobs')
         st.markdown('https://aijobs.net/')
         st.markdown('https://outerjoin.us/')
         st.markdown('https://himalayas.app/jobs/api')
     with tab2:
-        st.write('Coming soon')
+        st.markdown('https://www.efinancialcareers.co.uk/jobs')
     with tab3:
+        st.write('Coming soon')
+    with tab4:
         st.write('Coming soon')
         
 form = st.form(key='my-form')
